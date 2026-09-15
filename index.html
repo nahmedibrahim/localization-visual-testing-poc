@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Localization Visual Testing POC</title>
+<style>
+:root{font-family:Arial,sans-serif;color:#172033;background:#f5f7fb}*{box-sizing:border-box}body{margin:0}.shell{max-width:1080px;margin:auto;padding:28px}header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}.brand{font-weight:700;font-size:20px}.locale,.sub{color:#687286}.card{background:#fff;border:1px solid #dfe4ec;border-radius:12px;padding:24px}h1{margin:0 0 8px;font-size:28px}.sub{margin-bottom:24px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.field label{display:block;font-size:13px;font-weight:700;margin-bottom:7px}.input{height:42px;border:1px solid #cfd6e2;border-radius:7px;padding:11px;background:#fafbfc}.summary{margin-top:24px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.metric{border:1px solid #e1e6ee;border-radius:9px;padding:14px}.metric small{display:block;color:#6d7687;margin-bottom:6px}.metric strong{font-size:17px}.actions{display:flex;justify-content:flex-end;gap:10px;margin-top:26px}button{min-width:120px;height:42px;border-radius:7px;border:1px solid #aeb7c5;padding:0 16px;background:#fff;font-weight:700;white-space:nowrap}.primary{background:#243b67;color:#fff;border-color:#243b67}.status{display:inline-flex;align-items:center;gap:7px;font-size:13px;padding:7px 10px;border:1px solid #cdd6e2;border-radius:999px;margin-top:18px}.dot{width:8px;height:8px;border-radius:50%;background:#4f7b59}
+.overflow .program-label{width:145px;height:18px;overflow:hidden;white-space:nowrap}.overflow .primary{width:150px;max-width:150px;overflow:hidden}
+.rtl{direction:rtl}.rtl header,.rtl .actions{flex-direction:row-reverse}.rtl .field,.rtl .metric{text-align:right}
+.rtl-broken{direction:rtl}.rtl-broken .field,.rtl-broken .metric{text-align:left}.rtl-broken header,.rtl-broken .actions{flex-direction:row}.rtl-broken .status{direction:ltr}
+@media(max-width:700px){.grid,.summary{grid-template-columns:1fr}}
+</style></head>
+<body><div class="shell" id="app">
+<header><div class="brand" id="brand">Campus Portal</div><div class="locale" id="locale">English · en-US</div></header>
+<main class="card"><h1 id="title">Student Registration</h1><div class="sub" id="subtitle">Review the registration details before continuing.</div>
+<div class="grid">
+<div class="field"><label id="nameLabel">Student name</label><div class="input" id="nameValue">Test Student</div></div>
+<div class="field"><label class="program-label" id="programLabel">Academic program</label><div class="input" id="programValue">Computer Science</div></div>
+<div class="field"><label id="termLabel">Academic term</label><div class="input" id="termValue">Fall 2026</div></div>
+<div class="field"><label id="statusLabel">Registration status</label><div class="input" id="statusValue">Ready for review</div></div>
+</div>
+<div class="summary">
+<div class="metric"><small id="dateLabel">Registration date</small><strong id="dateValue">09/14/2026</strong></div>
+<div class="metric"><small id="creditsLabel">Credits</small><strong id="creditsValue">12.5</strong></div>
+<div class="metric"><small id="feeLabel">Estimated fee</small><strong id="feeValue">$1,250.50</strong></div>
+</div>
+<div class="status"><span class="dot"></span><span id="ready">Page ready for visual validation</span></div>
+<div id="successMessage" style="display:none;margin-top:18px;padding:12px 14px;border:1px solid #b9d7bf;border-radius:8px;background:#f4fbf5;font-weight:700;">Registration submitted successfully</div>
+<div class="actions"><button id="back">Back</button><button class="primary" id="continue">Continue</button></div>
+</main></div>
+<script>
+const state=new URLSearchParams(location.search).get("state")||"baseline",app=document.getElementById("app");
+const ar={brand:"بوابة الحرم الجامعي",locale:"العربية · ar-SA",title:"تسجيل الطالب",subtitle:"راجع تفاصيل التسجيل قبل المتابعة.",nameLabel:"اسم الطالب",nameValue:"طالب تجريبي",programLabel:"البرنامج الأكاديمي",programValue:"علوم الحاسب",termLabel:"الفصل الدراسي",termValue:"خريف 2026",statusLabel:"حالة التسجيل",statusValue:"جاهز للمراجعة",dateLabel:"تاريخ التسجيل",dateValue:"14/09/2026",creditsLabel:"الساعات المعتمدة",creditsValue:"12.5",feeLabel:"الرسوم التقديرية",feeValue:"1,250.50 ر.س",ready:"الصفحة جاهزة للتحقق البصري",back:"رجوع",continue:"متابعة"};
+const set=(id,v)=>document.getElementById(id).textContent=v;
+function arabic(){document.documentElement.lang="ar";document.documentElement.dir="rtl";Object.entries(ar).forEach(([k,v])=>set(k,v))}
+if(state==="overflow"){app.classList.add("overflow");set("programLabel","Academic program and specialization selection for international students");set("continue","Continue and confirm registration changes")}
+if(state==="rtl-good"){arabic();app.classList.add("rtl")}
+if(state==="rtl-broken"){arabic();app.classList.add("rtl-broken")}
+
+// Controlled functional states.
+if(state==="functional-good" || state==="functional-broken"){
+  const continueButton=document.getElementById("continue");
+  continueButton.addEventListener("click",function(){
+    if(state==="functional-good"){
+      const message=document.getElementById("successMessage");
+      message.style.display="block";
+      message.textContent="Registration submitted successfully";
+    }
+  });
+}
+</script></body></html>
