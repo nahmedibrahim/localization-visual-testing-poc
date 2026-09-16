@@ -8,10 +8,10 @@
 .overflow .program-label{width:145px;height:18px;overflow:hidden;white-space:nowrap}.overflow .primary{width:150px;max-width:150px;overflow:hidden}
 .rtl{direction:rtl}.rtl .field,.rtl .metric{text-align:right}
 .rtl-broken{direction:rtl}.rtl-broken .field,.rtl-broken .metric{text-align:left}.rtl-broken header,.rtl-broken .actions{flex-direction:row}.rtl-broken .status{direction:ltr}
-@media(max-width:700px){.grid,.summary{grid-template-columns:1fr}}
+.language-control{display:flex;align-items:center;gap:8px}.language-control label{font-size:13px;color:#687286}.language-control select{height:38px;border:1px solid #cfd6e2;border-radius:7px;background:#fff;padding:0 10px;font-weight:700}@media(max-width:700px){.grid,.summary{grid-template-columns:1fr}}
 </style></head>
 <body><div class="shell" id="app">
-<header><div class="brand" id="brand">Campus Portal</div><div class="locale" id="locale">English · en-US</div></header>
+<header><div class="brand" id="brand">Campus Portal</div><div class="locale" id="locale">English · en-US</div><div class="language-control" id="languageControl" style="display:none"><label for="languageSelector" id="languageSelectorLabel">Language</label><select id="languageSelector"><option value="en-US">English</option><option value="fr-FR">Français</option><option value="ar-SA">العربية</option><option value="es-ES">Español</option></select></div></header>
 <main class="card"><h1 id="title">Student Registration</h1><div class="sub" id="subtitle">Review the registration details before continuing.</div>
 <div class="grid">
 <div class="field"><label id="nameLabel">Student name</label><div class="input" id="nameValue">Test Student</div></div>
@@ -42,4 +42,18 @@ if(state==="date-en-good-2"){set("dateValue","12/24/2027")}
 if(state==="date-en-broken"){set("dateValue","24/12/2027")}
 if(state==="date-fr-good"){set("locale","Français · fr-FR");set("dateValue","24/12/2027")}
 if(state==="date-fr-broken"){set("locale","Français · fr-FR");set("dateValue","12/24/2027")}
+
+if(state==="locale-selection"){
+ document.getElementById("locale").style.display="none";
+ document.getElementById("languageControl").style.display="flex";
+ const T={
+ "en-US":["en","ltr","Campus Portal","Language","Student Registration","Review the registration details before continuing.","Student name","Test Student","Academic program","Computer Science","Academic term","Fall 2026","Registration status","Ready for review","Registration date","12/24/2027","Credits","12.5","Estimated fee","$1,250.50","Page ready for visual validation","Back","Continue"],
+ "fr-FR":["fr","ltr","Portail du campus","Langue","Inscription de l’étudiant","Vérifiez les informations d’inscription avant de continuer.","Nom de l’étudiant","Étudiant test","Programme académique","Informatique","Période académique","Automne 2026","Statut de l’inscription","Prêt pour vérification","Date d’inscription","24/12/2027","Crédits","12,5","Frais estimés","1 250,50 €","Page prête pour la validation visuelle","Retour","Continuer"],
+ "ar-SA":["ar","rtl","بوابة الحرم الجامعي","اللغة","تسجيل الطالب","راجع تفاصيل التسجيل قبل المتابعة.","اسم الطالب","طالب تجريبي","البرنامج الأكاديمي","علوم الحاسب","الفصل الدراسي","خريف 2026","حالة التسجيل","جاهز للمراجعة","تاريخ التسجيل","24/12/2027","الساعات المعتمدة","12.5","الرسوم التقديرية","1,250.50 ر.س","الصفحة جاهزة للتحقق البصري","رجوع","متابعة"],
+ "es-ES":["es","ltr","Portal del campus","Idioma","Inscripción del estudiante","Revise los detalles de inscripción antes de continuar.","Nombre del estudiante","Estudiante de prueba","Programa académico","Informática","Período académico","Otoño 2026","Estado de inscripción","Listo para revisión","Fecha de inscripción","24/12/2027","Créditos","12,5","Tarifa estimada","1.250,50 €","Página lista para validación visual","Atrás","Continuar"]};
+ const ids=["brand","languageSelectorLabel","title","subtitle","nameLabel","nameValue","programLabel","programValue","termLabel","termValue","statusLabel","statusValue","dateLabel","dateValue","creditsLabel","creditsValue","feeLabel","feeValue","ready","back","continue"];
+ function applyLocale(code){const x=T[code]||T["en-US"];document.documentElement.lang=x[0];document.documentElement.dir=x[1];app.classList.remove("rtl","rtl-broken");if(x[1]==="rtl")app.classList.add("rtl");ids.forEach((id,i)=>set(id,x[i+2]));localStorage.setItem("pocLocale",code);}
+ const s=document.getElementById("languageSelector"),saved=localStorage.getItem("pocLocale");if(saved&&T[saved])s.value=saved;applyLocale(s.value);s.addEventListener("change",()=>applyLocale(s.value));
+}
+
 </script></body></html>
