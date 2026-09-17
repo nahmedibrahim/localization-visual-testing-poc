@@ -8,11 +8,13 @@
 .overflow .program-label{width:145px;height:18px;overflow:hidden;white-space:nowrap}.overflow .primary{width:150px;max-width:150px;overflow:hidden}
 .rtl{direction:rtl}.rtl .field,.rtl .metric{text-align:right}
 .rtl-broken{direction:rtl}.rtl-broken .field,.rtl-broken .metric{text-align:left}.rtl-broken header,.rtl-broken .actions{flex-direction:row}.rtl-broken .status{direction:ltr}
-.language-control{display:flex;align-items:center;gap:8px}.language-control label{font-size:13px;color:#687286}.language-control select{height:38px;border:1px solid #cfd6e2;border-radius:7px;background:#fff;padding:0 10px;font-weight:700}@media(max-width:700px){.grid,.summary{grid-template-columns:1fr}}
+.hidden{display:none!important}.confirmation-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px}.confirmation-item{border:1px solid #e1e6ee;border-radius:9px;padding:14px}.confirmation-item small{display:block;color:#6d7687;margin-bottom:6px}.confirmation-item strong{font-size:16px}.language-control{display:flex;align-items:center;gap:8px}.language-control label{font-size:13px;color:#687286}.language-control select{height:38px;border:1px solid #cfd6e2;border-radius:7px;background:#fff;padding:0 10px;font-weight:700}@media(max-width:700px){.grid,.summary{grid-template-columns:1fr}}
 </style></head>
 <body><div class="shell" id="app">
 <header><div class="brand" id="brand">Campus Portal</div><div class="locale" id="locale">English · en-US</div><div class="language-control" id="languageControl" style="display:none"><label for="languageSelector" id="languageSelectorLabel">Language</label><select id="languageSelector"><option value="en-US">English</option><option value="fr-FR">Français</option><option value="ar-SA">العربية</option><option value="es-ES">Español</option></select></div></header>
-<main class="card"><h1 id="title">Student Registration</h1><div class="sub" id="subtitle">Review the registration details before continuing.</div>
+<main class="card">
+<section id="registrationView">
+<h1 id="title">Student Registration</h1><div class="sub" id="subtitle">Review the registration details before continuing.</div>
 <div class="grid">
 <div class="field"><label id="nameLabel">Student name</label><div class="input" id="nameValue">Test Student</div></div>
 <div class="field"><label class="program-label" id="programLabel">Academic program</label><div class="input" id="programValue">Computer Science</div></div>
@@ -27,6 +29,21 @@
 <div class="status"><span class="dot"></span><span id="ready">Page ready for visual validation</span></div>
 <div id="successMessage" class="success">Registration submitted successfully</div>
 <div class="actions"><button id="back">Back</button><button class="primary" id="continue">Continue</button></div>
+</section>
+<section id="confirmationView" class="hidden">
+<h1 id="confirmTitle">Registration Confirmation</h1><div class="sub" id="confirmSubtitle">Review the confirmation details below.</div>
+<div id="confirmMessage" class="success" style="display:block">Registration completed successfully.</div>
+<div class="confirmation-grid">
+<div class="confirmation-item"><small id="confirmStudentLabel">Student</small><strong id="confirmStudentValue">Test Student</strong></div>
+<div class="confirmation-item"><small id="confirmProgramLabel">Program</small><strong id="confirmProgramValue">Computer Science</strong></div>
+<div class="confirmation-item"><small id="confirmDateLabel">Start date</small><strong id="confirmDateValue">12/24/2027</strong></div>
+<div class="confirmation-item"><small id="confirmCreditsLabel">Total credits</small><strong id="confirmCreditsValue">12.5</strong></div>
+<div class="confirmation-item"><small id="confirmFeeLabel">Estimated fee</small><strong id="confirmFeeValue">$1,250.50</strong></div>
+<div class="confirmation-item"><small id="confirmStatusLabel">Status</small><strong id="confirmStatusValue">Confirmed</strong></div>
+</div>
+<div class="actions"><button id="returnRegistration">Back to Registration</button><button class="primary" id="finish">Finish</button></div>
+<div id="finishMessage" class="success">Registration flow completed successfully.</div>
+</section>
 </main></div>
 <script>
 const state=new URLSearchParams(location.search).get("state")||"baseline",app=document.getElementById("app");
@@ -47,13 +64,22 @@ if(state==="locale-selection"){
  document.getElementById("locale").style.display="none";
  document.getElementById("languageControl").style.display="flex";
  const T={
- "en-US":["en","ltr","Campus Portal","Language","Student Registration","Review the registration details before continuing.","Student name","Test Student","Academic program","Computer Science","Academic term","Fall 2026","Registration status","Ready for review","Registration date","12/24/2027","Credits","12.5","Estimated fee","$1,250.50","Page ready for visual validation","Back","Continue"],
- "fr-FR":["fr","ltr","Portail du campus","Langue","Inscription de l’étudiant","Vérifiez les informations d’inscription avant de continuer.","Nom de l’étudiant","Étudiant test","Programme académique","Informatique","Période académique","Automne 2026","Statut de l’inscription","Prêt pour vérification","Date d’inscription","24/12/2027","Crédits","12,5","Frais estimés","1 250,50 €","Page prête pour la validation visuelle","Retour","Continuer"],
- "ar-SA":["ar","rtl","بوابة الحرم الجامعي","اللغة","تسجيل الطالب","راجع تفاصيل التسجيل قبل المتابعة.","اسم الطالب","طالب تجريبي","البرنامج الأكاديمي","علوم الحاسب","الفصل الدراسي","خريف 2026","حالة التسجيل","جاهز للمراجعة","تاريخ التسجيل","2027/12/24","الساعات المعتمدة","12.5","الرسوم التقديرية","1,250.50 ر.س","الصفحة جاهزة للتحقق البصري","رجوع","متابعة"],
- "es-ES":["es","ltr","Portal del campus","Idioma","Inscripción del estudiante","Revise los detalles de inscripción antes de continuar.","Nombre del estudiante","Estudiante de prueba","Programa académico","Informática","Período académico","Otoño 2026","Estado de inscripción","Listo para revisión","Fecha de inscripción","24/12/2027","Créditos","12,5","Tarifa estimada","1.250,50 €","Página lista para validación visual","Atrás","Continuar"]};
- const ids=["brand","languageSelectorLabel","title","subtitle","nameLabel","nameValue","programLabel","programValue","termLabel","termValue","statusLabel","statusValue","dateLabel","dateValue","creditsLabel","creditsValue","feeLabel","feeValue","ready","back","continue"];
- function applyLocale(code){const x=T[code]||T["en-US"];document.documentElement.lang=x[0];document.documentElement.dir=x[1];app.classList.remove("rtl","rtl-broken");if(x[1]==="rtl")app.classList.add("rtl");ids.forEach((id,i)=>set(id,x[i+2]));localStorage.setItem("pocLocale",code);}
- const s=document.getElementById("languageSelector"),saved=localStorage.getItem("pocLocale");if(saved&&T[saved])s.value=saved;applyLocale(s.value);s.addEventListener("change",()=>applyLocale(s.value));
+ "en-US":{lang:"en",dir:"ltr",p1:["Campus Portal","Language","Student Registration","Review the registration details before continuing.","Student name","Test Student","Academic program","Computer Science","Academic term","Fall 2026","Registration status","Ready for review","Registration date","12/24/2027","Credits","12.5","Estimated fee","$1,250.50","Page ready for visual validation","Back","Continue"],p2:["Registration Confirmation","Review the confirmation details below.","Registration completed successfully.","Student","Test Student","Program","Computer Science","Start date","12/24/2027","Total credits","12.5","Estimated fee","$1,250.50","Status","Confirmed","Back to Registration","Finish","Registration flow completed successfully."]},
+ "fr-FR":{lang:"fr",dir:"ltr",p1:["Portail du campus","Langue","Inscription de l’étudiant","Vérifiez les informations d’inscription avant de continuer.","Nom de l’étudiant","Étudiant test","Programme académique","Informatique","Période académique","Automne 2026","Statut de l’inscription","Prêt pour vérification","Date d’inscription","24/12/2027","Crédits","12,5","Frais estimés","1 250,50 €","Page prête pour la validation visuelle","Retour","Continuer"],p2:["Confirmation de l’inscription","Vérifiez les informations de confirmation ci-dessous.","Inscription terminée avec succès.","Étudiant","Étudiant test","Programme","Informatique","Date de début","24/12/2027","Total des crédits","12,5","Frais estimés","1 250,50 €","Statut","Confirmé","Retour à l’inscription","Terminer","Processus d’inscription terminé avec succès."]},
+ "ar-SA":{lang:"ar",dir:"rtl",p1:["بوابة الحرم الجامعي","اللغة","تسجيل الطالب","راجع تفاصيل التسجيل قبل المتابعة.","اسم الطالب","طالب تجريبي","البرنامج الأكاديمي","علوم الحاسب","الفصل الدراسي","خريف 2026","حالة التسجيل","جاهز للمراجعة","تاريخ التسجيل","2027/12/24","الساعات المعتمدة","12.5","الرسوم التقديرية","1,250.50 ر.س","الصفحة جاهزة للتحقق البصري","رجوع","متابعة"],p2:["تأكيد التسجيل","راجع تفاصيل التأكيد أدناه.","تم إكمال التسجيل بنجاح.","الطالب","طالب تجريبي","البرنامج","علوم الحاسب","تاريخ البدء","2027/12/24","إجمالي الساعات","12.5","الرسوم التقديرية","1,250.50 ر.س","الحالة","مؤكد","العودة إلى التسجيل","إنهاء","تم إكمال عملية التسجيل بنجاح."]},
+ "es-ES":{lang:"es",dir:"ltr",p1:["Portal del campus","Idioma","Inscripción del estudiante","Revise los detalles de inscripción antes de continuar.","Nombre del estudiante","Estudiante de prueba","Programa académico","Informática","Período académico","Otoño 2026","Estado de inscripción","Listo para revisión","Fecha de inscripción","24/12/2027","Créditos","12,5","Tarifa estimada","1.250,50 €","Página lista para validación visual","Atrás","Continuar"],p2:["Confirmación de inscripción","Revise los detalles de confirmación a continuación.","La inscripción se completó correctamente.","Estudiante","Estudiante de prueba","Programa","Informática","Fecha de inicio","24/12/2027","Créditos totales","12,5","Tarifa estimada","1.250,50 €","Estado","Confirmado","Volver a inscripción","Finalizar","El proceso de inscripción se completó correctamente."]}
+ };
+ const p1ids=["brand","languageSelectorLabel","title","subtitle","nameLabel","nameValue","programLabel","programValue","termLabel","termValue","statusLabel","statusValue","dateLabel","dateValue","creditsLabel","creditsValue","feeLabel","feeValue","ready","back","continue"];
+ const p2ids=["confirmTitle","confirmSubtitle","confirmMessage","confirmStudentLabel","confirmStudentValue","confirmProgramLabel","confirmProgramValue","confirmDateLabel","confirmDateValue","confirmCreditsLabel","confirmCreditsValue","confirmFeeLabel","confirmFeeValue","confirmStatusLabel","confirmStatusValue","returnRegistration","finish","finishMessage"];
+ function applyLocale(code){const t=T[code]||T["en-US"];document.documentElement.lang=t.lang;document.documentElement.dir=t.dir;app.classList.remove("rtl","rtl-broken");if(t.dir==="rtl")app.classList.add("rtl");p1ids.forEach((id,i)=>set(id,t.p1[i]));p2ids.forEach((id,i)=>set(id,t.p2[i]));localStorage.setItem("pocLocale",code);}
+ function showRegistration(){document.getElementById("confirmationView").classList.add("hidden");document.getElementById("registrationView").classList.remove("hidden");document.getElementById("finishMessage").style.display="none";sessionStorage.setItem("pocPage","registration");}
+ function showConfirmation(){document.getElementById("registrationView").classList.add("hidden");document.getElementById("confirmationView").classList.remove("hidden");document.getElementById("finishMessage").style.display="none";sessionStorage.setItem("pocPage","confirmation");}
+ const selector=document.getElementById("languageSelector"),saved=localStorage.getItem("pocLocale");if(saved&&T[saved])selector.value=saved;applyLocale(selector.value);selector.addEventListener("change",()=>applyLocale(selector.value));
+ document.getElementById("continue").addEventListener("click",showConfirmation);
+ document.getElementById("returnRegistration").addEventListener("click",showRegistration);
+ document.getElementById("back").addEventListener("click",showRegistration);
+ document.getElementById("finish").addEventListener("click",()=>{document.getElementById("finishMessage").style.display="block";});
+ showRegistration();
 }
 
 </script></body></html>
